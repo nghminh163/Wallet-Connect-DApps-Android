@@ -1,0 +1,3 @@
+rootProject.name = "DApps NFT"
+include ':app'
+include ':Dapps Wallet Connect'
