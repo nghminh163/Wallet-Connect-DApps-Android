@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -50,13 +49,11 @@ class MainActivity : DAppActivity() {
     }
 
 
-    override fun initialSetup(cb: Session.Callback) {
-        DApp(applicationContext)
-        super.initialSetup(cb)
-    }
-
     override fun onDestroy() {
-        DApp.session.removeCallback(this)
+        val t = this
+        networkScope.launch {
+            DApp.session.removeCallback(t)
+        }
         super.onDestroy()
     }
 
@@ -114,7 +111,6 @@ class MainActivity : DAppActivity() {
             i.data = Uri.parse(wcUri)
             startActivity(i)
         }
-
     }
 
     private fun sessionClosed() {
@@ -161,7 +157,6 @@ class MainActivity : DAppActivity() {
 
 
     private fun handleResponse(resp: Session.MethodCall.Response) {
-
     }
 
 }

@@ -12,11 +12,12 @@ import org.walletconnect.nullOnThrow
 import java.io.File
 import java.util.*
 
-class DApp(val context: Context) {
+class DApp(val context: Context, metaData: Session.PeerMeta) {
     init {
         initClient()
         initMoshi()
         initSessionStorage()
+        metaClient = metaData
     }
 
     private fun initClient() {
@@ -42,7 +43,7 @@ class DApp(val context: Context) {
         private lateinit var storage: WCSessionStore
         lateinit var config: Session.Config
         lateinit var session: Session
-
+        lateinit var metaClient: Session.PeerMeta
         fun resetSession() {
             nullOnThrow { session }?.clearCallbacks()
             val key = ByteArray(32).also { Random().nextBytes(it) }.toNoPrefixHexString()
@@ -56,7 +57,7 @@ class DApp(val context: Context) {
                 MoshiPayloadAdapter(moshi),
                 storage,
                 OkHttpTransport.Builder(client, moshi),
-                Session.PeerMeta(name = "Example App")
+                metaClient
             )
             session.offer()
         }
